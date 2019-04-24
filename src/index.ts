@@ -52,6 +52,7 @@ interface Options {
   useTypescriptIncrementalApi: boolean;
   enableEmitFiles: boolean;
   measureCompilationTime: boolean;
+  errorsAsWarnings: boolean;
 }
 
 /**
@@ -98,6 +99,7 @@ class ForkTsCheckerWebpackPlugin {
   private colors: Chalk;
   private formatter: Formatter;
   private useTypescriptIncrementalApi: boolean;
+  private errorsAsWarnings: boolean;
 
   private enableEmitFiles: boolean;
 
@@ -223,6 +225,9 @@ class ForkTsCheckerWebpackPlugin {
       // Node 8+ only
       this.performance = require('perf_hooks').performance;
     }
+
+    this.errorsAsWarnings =
+      options.errorsAsWarnings === undefined ? false : options.errorsAsWarnings;
   }
 
   private validateVersions() {
@@ -809,7 +814,11 @@ class ForkTsCheckerWebpackPlugin {
         if (message.isWarningSeverity() && !this.ignoreLintWarnings) {
           compilation.warnings.push(formatted);
         } else {
-          compilation.errors.push(formatted);
+          if (this.errorsAsWarnings) {
+            compilation.warnings.push(formatted);
+          } else {
+            compilation.errors.push(formatted);
+          }
         }
       });
 
