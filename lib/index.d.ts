@@ -33,6 +33,7 @@ interface Options {
   useTypescriptIncrementalApi: boolean;
   enableEmitFiles: boolean;
   measureCompilationTime: boolean;
+  errorsAsWarnings: boolean;
 }
 /**
  * ForkTsCheckerWebpackPlugin
@@ -82,6 +83,7 @@ declare class ForkTsCheckerWebpackPlugin {
   private colors;
   private formatter;
   private useTypescriptIncrementalApi;
+  private errorsAsWarnings;
   private enableEmitFiles;
   private tsconfigPath?;
   private tslintPath?;
